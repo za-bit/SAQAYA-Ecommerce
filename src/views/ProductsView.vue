@@ -19,6 +19,7 @@ export default Vue.extend({});
   padding-left: 20px;
   margin-bottom: 35px;
   font-size: 14px;
+  margin-top: 12px;
 }
 
 .products {

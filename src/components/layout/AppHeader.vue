@@ -3,9 +3,11 @@
     <div class="text">Exclusive</div>
     <!-- Navigation -->
     <nav class="route">
-      <router-link to="/">Home</router-link>
-      <router-link to="/contact">Contact</router-link>
-      <router-link to="/about">About</router-link>
+      <nav class="route">
+        <router-link v-for="link in links" :key="link.path" :to="link.path">
+          {{ link.name }}
+        </router-link>
+      </nav>
     </nav>
     <!-- Search -->
     <div class="search">
@@ -32,6 +34,12 @@ export default Vue.extend({
   data() {
     return {
       searchQuery: "",
+      links: [
+        { name: "Home", path: "/" },
+        { name: "Contact", path: "/contact" },
+        { name: "About", path: "/about" },
+        { name: "Products", path: "/products" },
+      ],
     };
   },
   methods: {

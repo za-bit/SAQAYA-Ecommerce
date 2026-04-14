@@ -12,25 +12,21 @@
       </div>
       <div class="support">
         <h2>Support</h2>
-        <p>111 Bijoy sarani,Dhaka,</p>
-        <p>DH1515,Bangladesh.</p>
-        <p>exclusive@gmail.com</p>
-        <p>+88015-88888-9999</p>
+        <p v-for="item in supportInfo" :key="item">
+          {{ item }}
+        </p>
       </div>
       <div class="account">
         <h2>Account</h2>
-        <p>My Account</p>
-        <p>Login/Register</p>
-        <p>Cart</p>
-        <p>Wishlist</p>
-        <p>Shop</p>
+        <p v-for="item in accountLinks" :key="item">
+          {{ item }}
+        </p>
       </div>
       <div class="quick-link">
         <h2>Quick Link</h2>
-        <p>Privacy Policy</p>
-        <p>Terms Of Use</p>
-        <p>FAQ</p>
-        <p>Contact</p>
+        <p v-for="item in quickLinks" :key="item">
+          {{ item }}
+        </p>
       </div>
       <div class="download">
         <h2>Download App</h2>
@@ -44,10 +40,7 @@
             </div>
           </div>
           <div class="row2">
-            <img src="@/assets/icons/Icon-Facebook.svg" />
-            <img src="@/assets/icons/Icon-Twitter.svg" />
-            <img src="@/assets/icons/icon-instagram.svg" />
-            <img src="@/assets/icons/Icon-Linkedin.svg" />
+            <img v-for="icon in socialIcons" :key="icon" :src="icon" />
           </div>
         </div>
       </div>
@@ -62,27 +55,46 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-export default Vue.extend({});
+import facebook from "@/assets/icons/Icon-Facebook.svg";
+import twitter from "@/assets/icons/Icon-Twitter.svg";
+import instagram from "@/assets/icons/icon-instagram.svg";
+import linkedin from "@/assets/icons/Icon-Linkedin.svg";
+export default Vue.extend({
+  data() {
+    return {
+      accountLinks: ["Login/Register", "Cart", "Wishlist", "Shop"],
+      quickLinks: ["Privacy Policy", "Terms Of Use", "FAQ", "Contact"],
+      socialIcons: [facebook, twitter, instagram, linkedin],
+      supportInfo: [
+        "111 Bijoy sarani,Dhaka,",
+        "DH1515,Bangladesh.",
+        "exclusive@gmail.com",
+        "+88015-88888-9999",
+      ],
+    };
+  },
+});
 </script>
 
 <style scoped>
 .row {
   display: flex;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   gap: 80px;
-  padding: 30px 100px 30px 220px;
+  padding: 30px 100px 30px 100px;
 }
 .row1 {
   display: flex;
   align-items: center;
   margin-left: 40%;
   color: #ccc;
+  opacity: 0.4;
 }
 .column1 {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 .row2 {
   display: flex;
@@ -99,6 +111,7 @@ export default Vue.extend({});
   width: 100%;
   height: 1px;
   background-color: #ccc;
+  opacity: 0.4;
 }
 .email {
   position: relative;
