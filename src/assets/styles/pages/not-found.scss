@@ -1,0 +1,16 @@
+
+.not-found {
+  margin-top: 30px;
+
+&__title,
+&__text,
+&__button {
+  text-align: center;
+}
+&__title {
+  font-size: 30px;
+  margin-bottom: 25px;
+}
+&__text {
+  margin-bottom: 40px;
+}}

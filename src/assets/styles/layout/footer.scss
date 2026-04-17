@@ -1,0 +1,63 @@
+.footer,
+.footer__stores {
+  background-color: $black;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+
+&__container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 80px;
+  padding: 30px 100px 30px 100px;
+  line-height: 35px;
+}
+&__bottom {
+  display: flex;
+  align-items: center;
+  margin-left: 40%;
+  color: $text-gray;
+  opacity: 0.4;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+&__download {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+&__app,
+&__social {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+&__line {
+  width: 100%;
+  height: 1px;
+  background-color: $border-color;
+  opacity: 0.4;
+}
+&__email {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+&__email input {
+  padding: 8px 45px 8px 10px;
+  border-color: $white;
+  background-color: $black;
+  border-radius: 4px;
+  color: $white;
+  outline: none;
+}
+&__email img {
+  position: absolute;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+}

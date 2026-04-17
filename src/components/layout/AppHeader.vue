@@ -1,28 +1,39 @@
 <template>
   <header class="header">
-    <div class="text">Exclusive</div>
+    <div class="header__logo">Exclusive</div>
     <!-- Navigation -->
-    <nav class="route">
-      <nav class="route">
-        <router-link v-for="link in links" :key="link.path" :to="link.path">
-          {{ link.name }}
-        </router-link>
-      </nav>
+    <nav class="header__nav">
+      <router-link v-for="link in links" :key="link.path" :to="link.path">
+        {{ link.name }}
+      </router-link>
     </nav>
     <!-- Search -->
-    <div class="search">
+    <div class="header__search">
       <input
+        class="header__input"
         type="text"
         v-model="searchQuery"
         placeholder="What are you looking for?"
         @keyup.enter="handleSearch"
       />
-      <img src="@/assets/icons/search.svg" @click="handleSearch" />
+      <img
+        class="header__search-icon"
+        src="@/assets/images/icons/SearchIcon.svg"
+        @click="handleSearch"
+      />
     </div>
 
     <!-- Cart -->
-    <div class="cart">
-      <img src="@/assets/icons/Cart.svg" @click="$emit('open-cart')" />
+    <div class="header__cart">
+      <div class="cart-icon-wrapper">
+        <img
+          src="@/assets/images/icons/CartIc.svg"
+          @click="$emit('open-cart')"
+        />
+        <span class="cart-badge" v-if="cartCount > 0">
+          {{ cartCount }}
+        </span>
+      </div>
     </div>
   </header>
 </template>
@@ -42,81 +53,42 @@ export default Vue.extend({
       ],
     };
   },
+
+  computed: {
+    cartCount() {
+      return this.$store.getters.cartCount;
+    },
+  },
+
   methods: {
-    handleSearch() {
-      if (this.$route.name === "NotFound") {
-        return;
+    async handleSearch() {
+      if (!this.searchQuery.trim()) return;
+
+      if (this.$route.name !== "Products") {
+        await this.$router.push({ name: "Products" });
       }
 
-      if (!this.searchQuery) return;
-      this.searchQuery = "";
-      this.$router.push({ name: "NotFound" });
+      await this.$store.dispatch("searchProducts", this.searchQuery);
     },
   },
 });
 </script>
 
 <style scoped>
-.header {
-  display: flex;
-  align-items: center;
-  padding: 15px 30px;
-  background-color: transparent;
-  border-bottom: 1px solid #ddd;
-}
-
-.text {
-  font-size: 22px;
-  font-weight: bold;
-  color: black;
-  font-weight: bold;
-}
-
-.route {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-}
-
-.cart {
-  margin-left: auto;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  margin-left: 25px;
-}
-.search {
+@import "@/assets/styles/layout/header.scss";
+.cart-icon-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search input {
-  padding: 8px 45px 8px 10px;
-  border: none;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  outline: none;
-}
-
-.search img {
-  position: absolute;
-  right: 10px;
-  width: 16px;
-  height: 16px;
   cursor: pointer;
 }
-.route a {
-  color: black;
-  text-decoration: none;
-}
-.route a.router-link-active {
-  color: black;
-}
-.route a.router-link-exact-active {
-  border-bottom: 2px solid #b9b3b3;
-  padding-bottom: 3px;
-  font-weight: 500;
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #db4444;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
 }
 </style>

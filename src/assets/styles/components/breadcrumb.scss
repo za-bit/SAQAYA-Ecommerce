@@ -1,0 +1,24 @@
+.breadcrumb {
+  padding-left: 20px;
+  font-size: 14px;
+
+
+&__link {
+  text-decoration: none;
+  cursor: pointer;
+  color: $text-gray;
+
+  &:hover {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+&__slash {
+  color: $text-gray;
+}
+
+&__current {
+  color: $black;
+  font-weight: bold;
+}}

@@ -27,6 +27,13 @@ export default Vue.extend({
       isCartOpen: false,
     };
   },
+  mounted() {
+    this.$store.dispatch("fetchHomeData");
+
+    if (this.$store.state.allProducts.length === 0) {
+      this.$store.dispatch("fetchProductsPage");
+    }
+  },
 });
 </script>
 <style>

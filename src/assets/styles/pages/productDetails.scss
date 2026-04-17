@@ -1,0 +1,174 @@
+.product-details {
+  padding: 80px 135px;
+
+  &__main {
+    display: flex;
+    gap: 70px;
+    margin-top: 50px;
+  }
+
+  /* Gallery */
+  &__gallery {
+    display: flex;
+    gap: 30px;
+  }
+
+  &__thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__thumb {
+    width: 170px;
+    height: 138px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+
+    img {
+      max-width: 120px;
+      max-height: 100px;
+      object-fit: contain;
+    }
+
+    &.active {
+      border: 2px solid #db4444;
+    }
+  }
+
+  &__image {
+    width: 500px;
+    height: 600px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  /* Info */
+  &__info {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  &__rating {
+    margin-bottom: 10px;
+  }
+
+  &__price {
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  &__desc {
+    font-size: 14px;
+    line-height: 1.5;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #888;
+  }
+
+  /* Category */
+  &__category {
+    margin-top: 24px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__label {
+    margin-right: 8px;
+  }
+
+  &__value {
+    border-bottom: 1px solid #000;
+    font-weight: 500;
+  }
+
+  /* Actions */
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0;
+  }
+
+  &__qty {
+    display: flex;
+    border: 1px solid #888;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  &__qty-btn {
+    width: 40px;
+    height: 44px;
+    border: none;
+    background: white;
+    cursor: pointer;
+
+    &:hover {
+      background: #db4444;
+      color: white;
+    }
+  }
+
+  &__qty-value {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-left: 1px solid #888;
+    border-right: 1px solid #888;
+  }
+
+  /* Delivery */
+  &__delivery {
+    border: 1px solid #888;
+    border-radius: 4px;
+  }
+
+  &__delivery-item {
+    display: flex;
+    gap: 16px;
+    padding: 24px;
+
+    &:first-child {
+      border-bottom: 1px solid #888;
+    }
+
+    h4 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  /* Loading */
+  &__loading {
+    text-align: center;
+    padding: 100px;
+    font-size: 18px;
+  }
+}

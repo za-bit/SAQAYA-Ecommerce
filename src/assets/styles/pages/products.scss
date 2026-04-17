@@ -1,0 +1,28 @@
+.products-page {
+  padding: 40px 130px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  &__load-more {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 80px;
+  }
+}

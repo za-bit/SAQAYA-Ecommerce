@@ -1,0 +1,17 @@
+.btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  border: none;
+  background:$primary-color;
+  color: $white;
+  cursor: pointer;
+  height: 45px;
+  width: 220px;
+  border-radius: 4px;
+}
+
+
+.btn:hover {
+  opacity: 0.9;
+}

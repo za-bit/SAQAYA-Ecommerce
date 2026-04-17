@@ -1,0 +1,63 @@
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: transparent;
+  border-bottom: 1px solid $borderHeader-color;
+
+
+&__logo {
+  font-size: 22px;
+  font-weight: bold;
+  color:$black;
+  font-weight: bold;
+}
+
+&__nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+&__cart {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-left: 25px;
+}
+&__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+&__input {
+  padding: 8px 45px 8px 10px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  outline: none;
+}
+
+&__search-icon {
+  position: absolute;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+&__nav a {
+  color: $black;
+  text-decoration: none;
+}
+&__nav a.router-link-active {
+  color: $black;
+}
+&__nav a.router-link-exact-active {
+  border-bottom: 2px solid #b9b3b3;
+  padding-bottom: 3px;
+  font-weight: 500;
+}}

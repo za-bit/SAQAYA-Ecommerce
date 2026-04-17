@@ -1,0 +1,17 @@
+.features {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 60px;
+}
+
+.features__box {
+  max-width: 250px;
+}
+.features__title {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.features__desc {
+  font-size: 12px;
+  color: #555;
+}
