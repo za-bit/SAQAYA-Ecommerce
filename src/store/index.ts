@@ -29,6 +29,7 @@ export default new Vuex.Store({
     cartCount: (state) => state.cart.length,
   },
   mutations: {
+    SET_ALL_PRODUCTS: (state, products) => (state.allProducts = products),
     SET_LOADING: (state, status) => (state.loading = status),
     SET_FLASH_SALES: (state, products) => (state.flashSales = products),
     SET_EXPLORE_PRODUCTS: (state, products) =>
