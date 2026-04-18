@@ -9,8 +9,17 @@
 
     <div class="products-page__header">
       <h2 class="products-page__title">Explore Our Products</h2>
-    </div>
 
+      <div class="sorting-container">
+        <label for="sort">Sort by:</label>
+        <select id="sort" v-model="sortBy" class="sort-dropdown">
+          <option value="default">Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Best Rating</option>
+        </select>
+      </div>
+    </div>
     <div class="products-page__grid">
       <ProductCard
         v-for="product in displayedProducts"
@@ -36,6 +45,7 @@ export default Vue.extend({
   data() {
     return {
       visibleCount: 12,
+      sortBy: "default",
     };
   },
   computed: {
@@ -43,7 +53,17 @@ export default Vue.extend({
       return this.$store.state.allProducts;
     },
     displayedProducts(): Product[] {
-      return this.allProducts.slice(0, this.visibleCount);
+      let products = [...this.$store.state.allProducts];
+
+      if (this.sortBy === "price-asc") {
+        products.sort((a, b) => a.price - b.price);
+      } else if (this.sortBy === "price-desc") {
+        products.sort((a, b) => b.price - a.price);
+      } else if (this.sortBy === "rating") {
+        products.sort((a, b) => b.rating - a.rating);
+      }
+
+      return products.slice(0, this.visibleCount);
     },
     hasMore(): boolean {
       const totalInApi = this.$store.state.total;
