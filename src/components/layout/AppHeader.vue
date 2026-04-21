@@ -39,37 +39,47 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useProductStore } from "@/store";
 
-export default Vue.extend({
-  data() {
-    return {
-      searchQuery: "",
-      links: [
-        { name: "Home", path: "/" },
-        { name: "Contact", path: "/contact" },
-        { name: "About", path: "/about" },
-        { name: "Products", path: "/products" },
-      ],
-    };
-  },
+export default defineComponent({
+  name: "AppHeader",
 
-  computed: {
-    cartCount() {
-      return this.$store.getters.cartCount;
-    },
-  },
+  setup(_, { emit }) {
+    const router = useRouter();
+    const route = useRoute();
 
-  methods: {
-    async handleSearch() {
-      if (!this.searchQuery.trim()) return;
+    const store = useProductStore();
 
-      if (this.$route.name !== "Products") {
-        await this.$router.push({ name: "Products" });
+    const searchQuery = ref("");
+
+    const links = [
+      { name: "Home", path: "/" },
+      { name: "Contact", path: "/contact" },
+      { name: "About", path: "/about" },
+      { name: "Products", path: "/products" },
+    ];
+
+    const cartCount = computed(() => store.cartCount);
+
+    const handleSearch = async () => {
+      if (!searchQuery.value.trim()) return;
+
+      if (route.name !== "Products") {
+        await router.push({ name: "Products" });
       }
 
-      await this.$store.dispatch("searchProducts", this.searchQuery);
-    },
+      await store.searchProducts(searchQuery.value);
+    };
+
+    return {
+      searchQuery,
+      links,
+      cartCount,
+      handleSearch,
+      emit,
+    };
   },
 });
 </script>

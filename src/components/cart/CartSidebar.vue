@@ -74,30 +74,36 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { CartItem } from "@/store/index";
+import { defineComponent, computed } from "vue";
+import { useProductStore } from "@/store";
 
-export default Vue.extend({
-  computed: {
-    cartItems(): CartItem[] {
-      return this.$store.state.cart;
-    },
-    cartTotal(): number {
-      return this.$store.getters.cartTotal;
-    },
-  },
-  methods: {
-    updateQty(id: number, event: Event) {
+export default defineComponent({
+  name: "CartSidebar",
+  setup() {
+    const store = useProductStore();
+
+    const cartItems = computed(() => store.cart);
+    const cartTotal = computed(() => store.cartTotal);
+
+    const updateQty = (id: number, event: Event) => {
       const target = event.target as HTMLInputElement;
       const val = parseInt(target.value);
 
       if (val > 0) {
-        this.$store.commit("SET_QUANTITY", { id, quantity: val });
+        store.setQuantity(id, val);
       }
-    },
-    removeItem(id: number) {
-      this.$store.commit("REMOVE_FROM_CART", id);
-    },
+    };
+
+    const removeItem = (id: number) => {
+      store.removeFromCart(id);
+    };
+
+    return {
+      cartItems,
+      cartTotal,
+      updateQty,
+      removeItem,
+    };
   },
 });
 </script>

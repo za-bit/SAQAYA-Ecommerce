@@ -12,27 +12,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import Header from "@/components/layout/AppHeader.vue";
 import Footer from "@/components/layout/AppFooter.vue";
 import CartSidebar from "@/components/cart/CartSidebar.vue";
-export default Vue.extend({
+import { useProductStore } from "@/store";
+
+export default defineComponent({
+  name: "App",
   components: {
     Header,
     Footer,
     CartSidebar,
   },
-  data() {
-    return {
-      isCartOpen: false,
-    };
-  },
-  mounted() {
-    this.$store.dispatch("fetchHomeData");
 
-    if (this.$store.state.allProducts.length === 0) {
-      this.$store.dispatch("fetchProductsPage");
-    }
+  setup() {
+    const isCartOpen = ref(false);
+    const store = useProductStore();
+
+    onMounted(async () => {
+      await store.fetchHomeData();
+
+      if (store.allProducts.length === 0) {
+        await store.fetchProductsPage();
+      }
+    });
+
+    return {
+      isCartOpen,
+    };
   },
 });
 </script>

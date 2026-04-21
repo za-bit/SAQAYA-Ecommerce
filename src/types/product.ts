@@ -9,5 +9,6 @@ export interface Product {
   rating: number;
   discountPercentage: number;
   quantity: number;
+
   stock: number;
 }

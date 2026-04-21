@@ -54,23 +54,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+
 import facebook from "@/assets/images/logos/FacebookLogo.svg";
 import twitter from "@/assets/images/logos/TwitterIogo.svg";
 import instagram from "@/assets/images/logos/InstagramIogo.svg";
 import linkedin from "@/assets/images/logos/LinkedinLogo.svg";
-export default Vue.extend({
-  data() {
+
+export default defineComponent({
+  name: "AppFooter",
+
+  setup() {
+    const accountLinks = ["Login/Register", "Cart", "Wishlist", "Shop"];
+
+    const quickLinks = ["Privacy Policy", "Terms Of Use", "FAQ", "Contact"];
+
+    const socialIcons = [facebook, twitter, instagram, linkedin];
+
+    const supportInfo = [
+      "111 Bijoy sarani,Dhaka,",
+      "DH1515,Bangladesh.",
+      "exclusive@gmail.com",
+      "+88015-88888-9999",
+    ];
+
     return {
-      accountLinks: ["Login/Register", "Cart", "Wishlist", "Shop"],
-      quickLinks: ["Privacy Policy", "Terms Of Use", "FAQ", "Contact"],
-      socialIcons: [facebook, twitter, instagram, linkedin],
-      supportInfo: [
-        "111 Bijoy sarani,Dhaka,",
-        "DH1515,Bangladesh.",
-        "exclusive@gmail.com",
-        "+88015-88888-9999",
-      ],
+      accountLinks,
+      quickLinks,
+      socialIcons,
+      supportInfo,
     };
   },
 });

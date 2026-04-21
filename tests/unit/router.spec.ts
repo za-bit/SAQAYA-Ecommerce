@@ -1,10 +1,8 @@
 import router from "@/router";
-import VueRouter, { RouteConfig } from "vue-router";
+// import type { RouteRecordRaw } from "vue-router";
 
 describe("Vue Router", () => {
-  const typedRouter = router as VueRouter;
-
-  const routes = typedRouter.options.routes as RouteConfig[];
+  const routes = router.getRoutes();
 
   it("has all required routes", () => {
     const names = routes.map((r) => r.name);
@@ -38,6 +36,6 @@ describe("Vue Router", () => {
   it("products route is lazy loaded", () => {
     const route = routes.find((r) => r.name === "products");
 
-    expect(route && "component" in route).toBe(true);
+    expect(route && typeof route === "function").toBe(true);
   });
 });

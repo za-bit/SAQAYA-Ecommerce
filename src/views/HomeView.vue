@@ -57,29 +57,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, onMounted, computed } from "vue";
 import ProductCard from "@/components/product/ProductCard.vue";
+import { useProductStore } from "@/store";
 import homeImg from "@/assets/images/illustrations/HomeImage.svg";
 import todayIcon from "@/assets/images/icons/RectangleOrange.svg";
 
-export default Vue.extend({
+export default defineComponent({
   components: { ProductCard },
-  data: () => ({ homeImg, todayIcon }),
-  computed: {
-    flashSales() {
-      return this.$store.state.flashSales;
-    },
-    exploreProducts() {
-      return this.$store.state.exploreProducts;
-    },
-    loading() {
-      return this.$store.state.loading;
-    },
-  },
-  async mounted() {
-    if (this.$store.state.flashSales.length === 0) {
-      await this.$store.dispatch("fetchHomeData");
-    }
+
+  setup() {
+    const store = useProductStore();
+
+    const flashSales = computed(() => store.flashSales);
+    const exploreProducts = computed(() => store.exploreProducts);
+    const loading = computed(() => store.loading);
+
+    onMounted(async () => {
+      if (store.flashSales.length === 0) {
+        await store.fetchHomeData();
+      }
+    });
+
+    return {
+      flashSales,
+      exploreProducts,
+      loading,
+      homeImg,
+      todayIcon,
+    };
   },
 });
 </script>

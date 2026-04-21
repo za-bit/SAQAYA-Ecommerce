@@ -96,46 +96,69 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, ref, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import productService from "@/services/ProductService";
+import { useProductStore } from "@/store";
 import { Product } from "@/types/product";
 
-export default Vue.extend({
-  data() {
-    return {
-      product: null as Product | null,
-      mainImage: "",
-      qty: 1,
-    };
-  },
-  methods: {
-    async loadProduct() {
-      const id = this.$route.params.id;
+export default defineComponent({
+  name: "ProductDetails",
+
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const store = useProductStore();
+
+    const product = ref<Product | null>(null);
+    const mainImage = ref("");
+    const qty = ref(1);
+
+    const loadProduct = async () => {
+      const id = route.params.id as string;
+
       try {
         const res = await productService.getProductById(id);
-        this.product = res.data;
-        this.mainImage = res.data.thumbnail;
+
+        product.value = res.data;
+        mainImage.value = res.data.thumbnail;
       } catch (error) {
-        this.$router.push({ name: "NotFound" });
+        router.push({ name: "NotFound" });
       }
-    },
-    updateQty(val: number) {
-      if (this.qty + val >= 1) this.qty += val;
-    },
-    handleAddToCart() {
-      if (this.product) {
-        this.$store.commit("ADD_TO_CART", {
-          ...this.product,
-          quantity: this.qty,
+    };
+
+    const updateQty = (val: number) => {
+      if (qty.value + val >= 1) qty.value += val;
+    };
+
+    const handleAddToCart = () => {
+      if (product.value) {
+        store.addToCart({
+          ...product.value,
+          quantity: qty.value,
         });
       }
-    },
-  },
-  mounted() {
-    this.loadProduct();
-  },
-  watch: {
-    "$route.params.id": "loadProduct",
+    };
+
+    onMounted(() => {
+      loadProduct();
+    });
+
+    watch(
+      () => route.params.id,
+      () => {
+        loadProduct();
+      }
+    );
+
+    return {
+      product,
+      mainImage,
+      qty,
+      loadProduct,
+      updateQty,
+      handleAddToCart,
+    };
   },
 });
 </script>

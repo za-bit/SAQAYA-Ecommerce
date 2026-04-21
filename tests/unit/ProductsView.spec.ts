@@ -1,14 +1,11 @@
-import { shallowMount, createLocalVue } from "@vue/test-utils";
-import Vuex, { Store } from "vuex";
-import Vue from "vue";
+import { shallowMount } from "@vue/test-utils";
+import { createPinia, setActivePinia } from "pinia";
+import { useProductStore } from "@/store";
 import ProductsView from "@/views/ProductsView.vue";
 import { Product } from "@/types/product";
 
-const localVue = createLocalVue();
-localVue.use(Vuex);
-
 describe("ProductsView.vue", () => {
-  let store: Store<unknown>;
+  let store: ReturnType<typeof useProductStore>;
 
   const mockProducts: Product[] = [
     {
@@ -40,25 +37,19 @@ describe("ProductsView.vue", () => {
   ];
 
   beforeEach(() => {
-    store = new Vuex.Store({
-      state: {
-        allProducts: mockProducts,
-        total: 100,
-      },
-      actions: {
-        fetchProductsPage: jest.fn(),
-      },
-    });
+    setActivePinia(createPinia());
+    store = useProductStore();
+
+    store.allProducts = mockProducts;
+    store.total = 100;
   });
 
-  // 1) render
+  // 1) render products
   it("renders product cards", () => {
     const wrapper = shallowMount(ProductsView, {
-      localVue,
-      store,
-      stubs: {
-        "router-link": true,
-        ProductCard: true,
+      global: {
+        stubs: ["router-link", "ProductCard"],
+        plugins: [createPinia()],
       },
     });
 
@@ -68,20 +59,15 @@ describe("ProductsView.vue", () => {
   // 2) price sort
   it("sorts products by price ascending", async () => {
     const wrapper = shallowMount(ProductsView, {
-      localVue,
-      store,
-      stubs: {
-        "router-link": true,
-        ProductCard: true,
+      global: {
+        stubs: ["router-link", "ProductCard"],
+        plugins: [createPinia()],
       },
     });
 
     await wrapper.setData({ sortBy: "price-asc" });
-    await Vue.nextTick();
 
-    const vm = wrapper.vm as Vue & {
-      displayedProducts: Product[];
-    };
+    const vm = wrapper.vm as any;
 
     expect(vm.displayedProducts[0].price).toBe(500);
   });
@@ -89,20 +75,15 @@ describe("ProductsView.vue", () => {
   // 3) rating sort
   it("sorts products by rating", async () => {
     const wrapper = shallowMount(ProductsView, {
-      localVue,
-      store,
-      stubs: {
-        "router-link": true,
-        ProductCard: true,
+      global: {
+        stubs: ["router-link", "ProductCard"],
+        plugins: [createPinia()],
       },
     });
 
     await wrapper.setData({ sortBy: "rating" });
-    await Vue.nextTick();
 
-    const vm = wrapper.vm as Vue & {
-      displayedProducts: Product[];
-    };
+    const vm = wrapper.vm as any;
 
     expect(vm.displayedProducts[0].rating).toBe(4.9);
   });
@@ -110,42 +91,33 @@ describe("ProductsView.vue", () => {
   // 4) load more
   it("loads more products when button clicked", async () => {
     const wrapper = shallowMount(ProductsView, {
-      localVue,
-      store,
-      stubs: {
-        "router-link": true,
-        ProductCard: true,
+      global: {
+        stubs: ["router-link", "ProductCard"],
+        plugins: [createPinia()],
       },
     });
 
     await wrapper.find(".btn").trigger("click");
 
-    expect((wrapper.vm as Vue).$data.visibleCount).toBe(24);
+    expect((wrapper.vm as any).visibleCount).toBe(24);
   });
 
-  // 5) fetch on empty
-  it("dispatches fetchProductsPage on mount if empty", () => {
-    const dispatchSpy = jest.fn();
+  // 5) fetch on mount if empty
+  it("dispatches fetchProductsPage on mount if empty", async () => {
+    setActivePinia(createPinia());
+    const store = useProductStore();
 
-    const emptyStore = new Vuex.Store({
-      state: {
-        allProducts: [],
-        total: 100,
-      },
-      actions: {
-        fetchProductsPage: dispatchSpy,
-      },
-    });
+    store.allProducts = [];
+
+    const spy = jest.spyOn(store, "fetchProductsPage");
 
     shallowMount(ProductsView, {
-      localVue,
-      store: emptyStore,
-      stubs: {
-        "router-link": true,
-        ProductCard: true,
+      global: {
+        stubs: ["router-link", "ProductCard"],
+        plugins: [createPinia()],
       },
     });
 
-    expect(dispatchSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });

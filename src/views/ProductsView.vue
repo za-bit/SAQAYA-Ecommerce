@@ -36,62 +36,81 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import ProductCard from "@/components/product/ProductCard.vue";
+import { useProductStore } from "@/store";
 import { Product } from "@/types/product";
 
-export default Vue.extend({
-  components: { ProductCard },
-  data() {
-    return {
-      visibleCount: 12,
-      sortBy: "default",
-    };
-  },
-  computed: {
-    allProducts(): Product[] {
-      return this.$store.state.allProducts;
-    },
-    displayedProducts(): Product[] {
-      let products = [...this.$store.state.allProducts];
+export default defineComponent({
+  name: "ProductsView",
 
-      if (this.sortBy === "price-asc") {
+  components: {
+    ProductCard,
+  },
+
+  setup() {
+    const router = useRouter();
+    const store = useProductStore();
+
+    const visibleCount = ref(12);
+    const sortBy = ref("default");
+
+    const allProducts = computed<Product[]>(() => store.allProducts);
+
+    const displayedProducts = computed(() => {
+      let products = [...store.allProducts];
+
+      if (sortBy.value === "price-asc") {
         products.sort((a, b) => a.price - b.price);
-      } else if (this.sortBy === "price-desc") {
+      } else if (sortBy.value === "price-desc") {
         products.sort((a, b) => b.price - a.price);
-      } else if (this.sortBy === "rating") {
+      } else if (sortBy.value === "rating") {
         products.sort((a, b) => b.rating - a.rating);
       }
 
-      return products.slice(0, this.visibleCount);
-    },
-    hasMore(): boolean {
-      const totalInApi = this.$store.state.total;
-      return (
-        this.allProducts.length < totalInApi ||
-        this.visibleCount < this.allProducts.length
-      );
-    },
-  },
-  methods: {
-    async handleLoadMore() {
-      this.visibleCount += 12;
+      return products.slice(0, visibleCount.value);
+    });
 
-      if (this.visibleCount >= this.allProducts.length) {
-        await this.$store.dispatch("fetchProductsPage");
+    const hasMore = computed(() => {
+      const totalInApi = store.total;
+
+      return (
+        store.allProducts.length < totalInApi ||
+        visibleCount.value < store.allProducts.length
+      );
+    });
+
+    const handleLoadMore = async () => {
+      visibleCount.value += 12;
+
+      if (visibleCount.value >= store.allProducts.length) {
+        await store.fetchProductsPage();
       }
-    },
-    goToDetails(id: number) {
-      this.$router.push({
-        name: "ProductDetails",
+    };
+
+    const goToDetails = (id: number) => {
+      router.push({
+        name: "productDetails",
         params: { id: id.toString() },
       });
-    },
-  },
-  async mounted() {
-    if (this.allProducts.length === 0) {
-      await this.$store.dispatch("fetchProductsPage");
-    }
+    };
+
+    onMounted(async () => {
+      if (store.allProducts.length === 0) {
+        await store.fetchProductsPage();
+      }
+    });
+
+    return {
+      sortBy,
+      visibleCount,
+      allProducts,
+      displayedProducts,
+      hasMore,
+      handleLoadMore,
+      goToDetails,
+    };
   },
 });
 </script>

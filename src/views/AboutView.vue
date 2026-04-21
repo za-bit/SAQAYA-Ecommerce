@@ -65,7 +65,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+
 import aboutImg from "@/assets/images/illustrations/AboutImage.webp";
 import saller from "@/assets/images/icons/SallersActive.svg";
 import mopnthly from "@/assets/images/icons/MopnthlyProduduct.svg";
@@ -80,75 +81,85 @@ import money from "@/assets/images/icons/MoneyBack.svg";
 import twitter from "@/assets/images/logos/TwitterBlack.svg";
 import insta from "@/assets/images/logos/InstagramBlack.svg";
 import linkedin from "@/assets/images/logos/LinkedinBlack.svg";
-export default Vue.extend({
-  data() {
+
+export default defineComponent({
+  name: "AboutView",
+
+  setup() {
+    const stats = [
+      {
+        number: "10.5k",
+        text: "Sellers active our site",
+        icon: saller,
+        highlight: false,
+      },
+      {
+        number: "33k",
+        text: "Monthly Product Sale",
+        icon: mopnthly,
+        highlight: true,
+      },
+      {
+        number: "45.5k",
+        text: "Customer active in our site",
+        icon: customerActive,
+        highlight: false,
+      },
+      {
+        number: "25k",
+        text: "Anual gross sale in our site",
+        icon: anual,
+        highlight: false,
+      },
+    ];
+
+    const team = [
+      {
+        id: 1,
+        name: "Tom Cruise",
+        role: "Founder & Chairman",
+        image: tom,
+      },
+      {
+        id: 2,
+        name: "Emma Watson",
+        role: "Managing Director",
+        image: emma,
+      },
+      {
+        id: 3,
+        name: "Will Smith",
+        role: "Product Designer",
+        image: will,
+      },
+    ];
+
+    const socialIcons = [twitter, insta, linkedin];
+
+    const features = [
+      {
+        title: "FREE AND FAST DELIVERY",
+        desc: "Free delivery for all orders over $140",
+        icon: free,
+      },
+      {
+        title: "24/7 CUSTOMER SERVICE",
+        desc: "Friendly 24/7 customer support",
+        icon: custumerService,
+      },
+      {
+        title: "MONEY BACK GUARANTEE",
+        desc: "We return money within 30 days",
+        icon: money,
+      },
+    ];
+
     return {
       aboutImg,
-      stats: [
-        {
-          number: "10.5k",
-          text: "Sellers active our site",
-          icon: saller,
-          highlight: false,
-        },
-        {
-          number: "33k",
-          text: "Monthly Product Sale",
-          icon: mopnthly,
-          highlight: true,
-        },
-        {
-          number: "45.5k",
-          text: "Customer active in our site",
-          icon: customerActive,
-          highlight: false,
-        },
-        {
-          number: "25k",
-          text: "Anual gross sale in our site",
-          icon: anual,
-          highlight: false,
-        },
-      ],
-      team: [
-        {
-          id: 1,
-          name: "Tom Cruise",
-          role: "Founder & Chairman",
-          image: tom,
-        },
-        {
-          id: 2,
-          name: "Emma Watson",
-          role: "Managing Director",
-          image: emma,
-        },
-        {
-          id: 3,
-          name: "Will Smith",
-          role: "Product Designer",
-          image: will,
-        },
-      ],
-      socialIcons: [twitter, insta, linkedin],
-
-      features: [
-        {
-          title: "FREE AND FAST DELIVERY",
-          desc: "Free delivery for all orders over $140",
-          icon: free,
-        },
-        {
-          title: "24/7 CUSTOMER SERVICE",
-          desc: "Friendly 24/7 customer support",
-          icon: custumerService,
-        },
-        {
-          title: "MONEY BACK GUARANTEE",
-          desc: "We return money within 30 days",
-          icon: money,
-        },
-      ],
+      stats,
+      team,
+      socialIcons,
+      features,
     };
   },
 });

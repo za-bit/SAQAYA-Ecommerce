@@ -63,28 +63,32 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent, reactive } from "vue";
+
 interface ContactForm {
   name: string;
   email: string;
   message: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "ContactPage",
-  data() {
-    return {
-      formData: {
-        name: "",
-        email: "",
-        message: "",
-      } as ContactForm,
+
+  setup() {
+    const formData = reactive<ContactForm>({
+      name: "",
+      email: "",
+      message: "",
+    });
+
+    const handleSubmit = (): void => {
+      console.log("Form Data:", formData);
     };
-  },
-  methods: {
-    handleSubmit(): void {
-      console.log("Form Data:", this.formData);
-    },
+
+    return {
+      formData,
+      handleSubmit,
+    };
   },
 });
 </script>

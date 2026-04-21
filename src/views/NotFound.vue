@@ -15,9 +15,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
 
-export default Vue.extend({});
+export default defineComponent({
+  name: "NotFound",
+
+  setup() {
+    const router = useRouter();
+
+    const goHome = () => {
+      router.push("/");
+    };
+
+    return {
+      goHome,
+    };
+  },
+});
 </script>
 
 <style scoped>

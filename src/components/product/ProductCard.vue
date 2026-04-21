@@ -37,24 +37,43 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
+import { defineComponent, PropType } from "vue";
+import { useRouter } from "vue-router";
+import { useProductStore } from "@/store";
 import { Product } from "@/types/product";
 
-export default Vue.extend({
+export default defineComponent({
   name: "ProductCard",
+
   props: {
-    product: { type: Object as PropType<Product>, required: true },
+    product: {
+      type: Object as PropType<Product>,
+      required: true,
+    },
   },
-  methods: {
-    addToCart() {
-      this.$store.commit("ADD_TO_CART", this.product);
-    },
-    goToDetails() {
-      this.$router.push({
+
+  setup(props) {
+    const router = useRouter();
+
+    const store = useProductStore();
+
+    const addToCart = () => {
+      store.addToCart(props.product);
+    };
+
+    const goToDetails = () => {
+      router.push({
         name: "productDetails",
-        params: { id: this.product.id.toString() },
+        params: {
+          id: props.product.id.toString(),
+        },
       });
-    },
+    };
+
+    return {
+      addToCart,
+      goToDetails,
+    };
   },
 });
 </script>
