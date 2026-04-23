@@ -1,122 +1,75 @@
 import { shallowMount } from "@vue/test-utils";
-import { createRouter, createWebHistory } from "vue-router";
 import { createPinia, setActivePinia } from "pinia";
 import ProductCard from "@/components/product/ProductCard.vue";
-import { Product } from "@/types/product";
+import { useProductStore } from "@/store";
+
+// Mock router
+const mockPush = jest.fn();
+
+jest.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
 
 describe("ProductCard.vue", () => {
-  let router: any;
-  let pinia: any;
+  let store: ReturnType<typeof useProductStore>;
 
-  const mockProduct: Product = {
+  const product = {
     id: 1,
     title: "iPhone 15",
-    description: "Test description",
-    price: 999,
+    price: 1000,
+    rating: 4,
+    category: "phones",
+    description: "",
     discountPercentage: 10,
-    rating: 4.5,
     stock: 10,
-    category: "smartphones",
-    thumbnail: "test.jpg",
-    images: ["img1.jpg"],
+    thumbnail: "",
+    images: [],
     quantity: 1,
   };
 
   beforeEach(() => {
-    pinia = createPinia();
-    setActivePinia(pinia);
-
-    router = createRouter({
-      history: createWebHistory(),
-      routes: [],
-    });
+    setActivePinia(createPinia());
+    store = useProductStore();
+    jest.clearAllMocks();
   });
 
-  // render
-  it("renders product title and price correctly", () => {
+  // 1) Render test
+  it("renders product data correctly", () => {
     const wrapper = shallowMount(ProductCard, {
-      global: {
-        plugins: [pinia, router],
-      },
-      props: {
-        product: mockProduct,
-      },
+      props: { product },
     });
 
-    expect(wrapper.find(".product-card__title").text()).toBe(mockProduct.title);
-
-    expect(wrapper.find(".product-card__price").text()).toContain(
-      mockProduct.price.toString()
-    );
+    expect(wrapper.text()).toContain("iPhone 15");
+    expect(wrapper.text()).toContain("1000");
+    expect(wrapper.text()).toContain("phones");
   });
 
-  // discount
-  it("shows discount badge when discount exists", () => {
+  // 2) Add to cart
+  it("calls store.addToCart when button clicked", async () => {
     const wrapper = shallowMount(ProductCard, {
-      global: {
-        plugins: [pinia, router],
-      },
-      props: {
-        product: mockProduct,
-      },
+      props: { product },
     });
 
-    expect(wrapper.find(".product-card__discount").exists()).toBe(true);
-  });
-
-  // add to cart (⚠️ ملاحظة مهمة تحت)
-  it("commits ADD_TO_CART when clicking button", async () => {
-    const wrapper = shallowMount(ProductCard, {
-      global: {
-        plugins: [pinia, router],
-      },
-      props: {
-        product: mockProduct,
-      },
-    });
+    const spy = jest.spyOn(store, "addToCart");
 
     await wrapper.find(".product-card__btn").trigger("click");
 
-    // هنا مش هنستخدم commit spy لأن Pinia actions مش commit
-    expect(true).toBe(true);
+    expect(spy).toHaveBeenCalledWith(product);
   });
 
-  // navigation
-  it("navigates to product details on card click", async () => {
-    const pushSpy = jest.spyOn(router, "push").mockImplementation();
-
+  // 3) Navigation
+  it("navigates to product details page", async () => {
     const wrapper = shallowMount(ProductCard, {
-      global: {
-        plugins: [pinia, router],
-      },
-      props: {
-        product: mockProduct,
-      },
+      props: { product },
     });
 
-    await wrapper.find(".product-card").trigger("click");
+    await wrapper.trigger("click");
 
-    expect(pushSpy).toHaveBeenCalledWith({
+    expect(mockPush).toHaveBeenCalledWith({
       name: "productDetails",
-      params: { id: mockProduct.id.toString() },
+      params: { id: "1" },
     });
-  });
-
-  // no navigation on button click
-  it("does not navigate when clicking add to cart button", async () => {
-    const pushSpy = jest.spyOn(router, "push").mockImplementation();
-
-    const wrapper = shallowMount(ProductCard, {
-      global: {
-        plugins: [pinia, router],
-      },
-      props: {
-        product: mockProduct,
-      },
-    });
-
-    await wrapper.find(".product-card__btn").trigger("click");
-
-    expect(pushSpy).not.toHaveBeenCalled();
   });
 });

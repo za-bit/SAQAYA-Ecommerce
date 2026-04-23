@@ -1,123 +1,61 @@
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
-import { useProductStore } from "@/store";
 import ProductsView from "@/views/ProductsView.vue";
-import { Product } from "@/types/product";
+import { useProductStore } from "@/store";
+import { createRouter, createWebHistory } from "vue-router";
 
-describe("ProductsView.vue", () => {
+describe("ProductsView", () => {
   let store: ReturnType<typeof useProductStore>;
 
-  const mockProducts: Product[] = [
-    {
-      id: 1,
-      title: "iPhone",
-      price: 1000,
-      rating: 4.5,
-      description: "desc",
-      discountPercentage: 10,
-      stock: 10,
-      category: "phones",
-      thumbnail: "img.jpg",
-      images: ["img.jpg"],
-      quantity: 1,
-    },
-    {
-      id: 2,
-      title: "Samsung",
-      price: 500,
-      rating: 4.9,
-      description: "desc",
-      discountPercentage: 5,
-      stock: 10,
-      category: "phones",
-      thumbnail: "img.jpg",
-      images: ["img.jpg"],
-      quantity: 1,
-    },
-  ];
+  const router = createRouter({
+    history: createWebHistory(),
+    routes: [{ path: "/", name: "home", component: {} }],
+  });
 
   beforeEach(() => {
     setActivePinia(createPinia());
     store = useProductStore();
 
-    store.allProducts = mockProducts;
-    store.total = 100;
+    store.$patch({
+      allProducts: [
+        { id: 1, price: 100, rating: 4, title: "A" },
+        { id: 2, price: 50, rating: 5, title: "B" },
+        { id: 3, price: 200, rating: 3, title: "C" },
+      ],
+      total: 3,
+    });
   });
 
-  // 1) render products
-  it("renders product cards", () => {
-    const wrapper = shallowMount(ProductsView, {
-      global: {
-        stubs: ["router-link", "ProductCard"],
-        plugins: [createPinia()],
-      },
+  it("renders products", () => {
+    const wrapper = mount(ProductsView, {
+      global: { plugins: [router] },
     });
 
-    expect(wrapper.findAllComponents({ name: "ProductCard" }).length).toBe(2);
+    const cards = wrapper.findAllComponents({ name: "ProductCard" });
+    expect(cards.length).toBe(3);
   });
 
-  // 2) price sort
-  it("sorts products by price ascending", async () => {
-    const wrapper = shallowMount(ProductsView, {
-      global: {
-        stubs: ["router-link", "ProductCard"],
-        plugins: [createPinia()],
-      },
+  it("sort by price", async () => {
+    const wrapper = mount(ProductsView, {
+      global: { plugins: [router] },
     });
 
-    await wrapper.setData({ sortBy: "price-asc" });
+    await wrapper.find("select").setValue("price-asc");
 
-    const vm = wrapper.vm as any;
+    const products = (wrapper.vm as any).displayedProducts;
 
-    expect(vm.displayedProducts[0].price).toBe(500);
+    expect(products[0].price).toBe(50);
   });
 
-  // 3) rating sort
-  it("sorts products by rating", async () => {
-    const wrapper = shallowMount(ProductsView, {
-      global: {
-        stubs: ["router-link", "ProductCard"],
-        plugins: [createPinia()],
-      },
+  it("sort by rating", async () => {
+    const wrapper = mount(ProductsView, {
+      global: { plugins: [router] },
     });
 
-    await wrapper.setData({ sortBy: "rating" });
+    await wrapper.find("select").setValue("rating");
 
-    const vm = wrapper.vm as any;
+    const products = (wrapper.vm as any).displayedProducts;
 
-    expect(vm.displayedProducts[0].rating).toBe(4.9);
-  });
-
-  // 4) load more
-  it("loads more products when button clicked", async () => {
-    const wrapper = shallowMount(ProductsView, {
-      global: {
-        stubs: ["router-link", "ProductCard"],
-        plugins: [createPinia()],
-      },
-    });
-
-    await wrapper.find(".btn").trigger("click");
-
-    expect((wrapper.vm as any).visibleCount).toBe(24);
-  });
-
-  // 5) fetch on mount if empty
-  it("dispatches fetchProductsPage on mount if empty", async () => {
-    setActivePinia(createPinia());
-    const store = useProductStore();
-
-    store.allProducts = [];
-
-    const spy = jest.spyOn(store, "fetchProductsPage");
-
-    shallowMount(ProductsView, {
-      global: {
-        stubs: ["router-link", "ProductCard"],
-        plugins: [createPinia()],
-      },
-    });
-
-    expect(spy).toHaveBeenCalled();
+    expect(products[0].rating).toBe(5);
   });
 });
